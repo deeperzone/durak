@@ -2,7 +2,10 @@ class Player:
     def __init__(self, name):
         self.name = name
     
-    def cardsInHand(self, deck, count):
+    def handOverCards(self, deck, count):
+        if(len(deck.cards) == 0):
+            print ('В колоде нет карт!')
+            return
         self.cards = []
         destLength = count - len(self.cards)
         iterator = 0

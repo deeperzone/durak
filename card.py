@@ -4,4 +4,7 @@ class Card:
         self.suit = suit
         self.number = number
 
+    def fullName(self):
+        return f'{self.suit} {self.name}';
+
     

@@ -14,7 +14,7 @@ class Deck:
         if(type(deckType) != DeckType): raise Exception('Некорректный тип колоды')
         self.__deckType = deckType
 
-    def fillCards(self):
+    def fillDeck(self):
         self.cards = []
         iterator = 1
         for suit in self.__suits:
@@ -26,5 +26,8 @@ class Deck:
         print (f'Колода заполнена {str(len(self.cards))} картами')
     
     def shuffleDeck(self):
+        if(len(self.cards) == 0):
+            print ('В колоде нет карт!')
+            return
         random.shuffle(self.cards)
         print ('Колода перемешана')

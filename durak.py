@@ -13,7 +13,7 @@ class Durak(BaseGame):
         self.trumpCard = self._deck.cards.pop(cardNumber)
         print(f'Козырная карта в колоде: {self.trumpCard.fullName()}')
     
-    def defineFirstMovePlayer(self):
+    def _defineFirstMovePlayer(self):
         if (self.trumpCard == None):
             print ('Козырь не определён!')
             return
@@ -33,11 +33,41 @@ class Durak(BaseGame):
         print (f'Первый ход у игрока: {playerFirstMove.name}')
         return playerFirstMove
 
+    def nextPlayer(self):
+        try:
+            self.currentPlayer
+        except AttributeError:
+            self.currentPlayer = self._defineFirstMovePlayer()
+            return self.currentPlayer
+        
+        index = self._players.index(self.currentPlayer) + 1
+        if(index > len(self._players) - 1):
+            self.currentPlayer = self._players[0]
+            return self.currentPlayer
+        else:
+            self.currentPlayer = self._players[index]
+            return self.currentPlayer
 
-durak = Durak([Player('Иван'), Player('bot')], DeckType.Card36, 6)
+    def checkLoser(self):
+        playersWithCard = []
+        for player in self._players:
+            if(len(player.cards) > 0):
+                playersWithCard.append(player)
+        if(len(playersWithCard) == 1): return playersWithCard[0]
+        else: return None
+
+
+durak = Durak([Player('Иван'), Player('bot', True)], DeckType.Card36, 6)
 durak.fillDeck()
 durak.shuffleDeck()
 durak.handOverCards()
 durak.defineTrump()
-player = durak.defineFirstMovePlayer()
-player.setCurrentMove()
+
+loser = None
+while (loser == None):
+    player = durak.nextPlayer()
+    cardName = player.setCurrentMove(durak.trumpCard).fullName()
+    print (f'Игрок {player.name} ходит: {cardName}')
+    loser = durak.checkLoser()
+
+print (f'Игрок {loser.name} проиграл')

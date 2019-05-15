@@ -1,5 +1,6 @@
 from baseGame import BaseGame
 from deck import DeckType
+from player import Player
 import random
 
 class Durak(BaseGame):
@@ -30,11 +31,13 @@ class Durak(BaseGame):
         else:
             playerFirstMove = playerFirstMove[0]
         print (f'Первый ход у игрока: {playerFirstMove.name}')
+        return playerFirstMove
 
 
-durak = Durak(['Иван', 'bot'], DeckType.Card36, 6)
+durak = Durak([Player('Иван'), Player('bot')], DeckType.Card36, 6)
 durak.fillDeck()
 durak.shuffleDeck()
 durak.handOverCards()
 durak.defineTrump()
-durak.defineFirstMovePlayer()
+player = durak.defineFirstMovePlayer()
+player.setCurrentMove()

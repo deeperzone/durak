@@ -5,9 +5,7 @@ import random
 class BaseGame: 
     def __init__(self, players, deckType, cardsInHand):
         if(type(deckType) != DeckType): raise Exception('Не удалось определить колоду')
-        self._players = []
-        for player in players:
-            self._players.append(Player(player))
+        self._players = players
         self._deck = Deck(deckType)
         self._cardsInHand = cardsInHand
 

@@ -20,19 +20,37 @@ class Player:
             iterator += 1
         print (f'Игрок {self.name} взял {str(destLength)} карт')
 
-    def setCurrentMove(self, trumpCard):
-        cardIndex = None
-        if(self.isBot):
-            # print(Card.showCards(self.cards))
-            cardIndex = self._aiFindCardIndex(trumpCard)
+    def setCurrentMove(self, move):
+        if(move.playerMove == self):
+            self.__move(move)
         else:
-            print (f'########## {self.name} -> Ваш ход, выберите карту: ##########')
-            while (cardIndex == None):
-                cardNumber = input(Card.showCards(self.cards)+': ')
-                cardIndex = self._findCardIndex(cardNumber)
-        return self.cards.pop(cardIndex)
+            self.__defense(move)
 
-    def _findCardIndex(self, cardNumber):
+    def __defense(self, move):
+        # Пока кидаем первую карту
+        if(self.isBot):
+            move.add(self, self.cards.pop(0))
+        else: self.__userInput(move, False)
+
+    def __move(self, move):
+        if(self.isBot):
+            card = self.__aiFindCard(move)
+            move.add(self, card)
+            self.cards.remove(card)
+        else: self.__userInput(move, True)
+        
+    def __userInput(self, move, isMove):
+        currentActionName = 'Ходите' if isMove else 'Отбивайтесь'
+        print (f'########## {self.name} -> {currentActionName}, выберите карту: ##########')
+        while (True):
+            cardNumber = input(Card.showCards(self.cards)+': ')
+            card = self.__findCard(cardNumber)
+            if(move.add(self, card)):
+                self.cards.remove(card)
+                return
+            else: print ('Не допустимый ход')
+
+    def __findCard(self, cardNumber):
         try:
             cardNumber = int(cardNumber)
         except ValueError:
@@ -40,18 +58,18 @@ class Player:
 
         for i in range(0, len(self.cards)):
             if(self.cards[i].number == cardNumber):
-                return i
+                return self.cards[i]
         return None
 
-    def _aiFindCardIndex(self, trumpCard):
-        minCardIndex = self._aiGetMinIndex(trumpCard, False)
-        if(minCardIndex == None): minCardIndex = self._aiGetMinIndex(trumpCard, True)
-        return minCardIndex
+    def __aiFindCard(self, move):
+        minCard = self.__aiGetMin(move, False)
+        if(minCard == None): minCard = self.__aiGetMin(move, True)
+        return minCard
 
-    def _aiGetMinIndex(self, trumpCard, isTrump):
-        cards = list(filter(lambda x: (x.suit == trumpCard.suit) == isTrump, self.cards))
+    def __aiGetMin(self, move, isTrump):
+        cards = list(filter(lambda x: (x.suit == move.trumpCard.suit) == isTrump, self.cards))
         if(len(cards) == 0): return None
-        return self.cards.index(min(cards, key=lambda x: x.number))
+        return min(cards, key=lambda x: x.number)
 
         
 

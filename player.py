@@ -38,6 +38,7 @@ class Player:
             card = self.__aiFindCard(move)
             move.add(self, card)
             self.cards.remove(card)
+            print (f'{move.playerDefense.name} думает...')
         else: self.__userInput(move, True)
 
     def __checkAvailable(self, move, card):
@@ -49,13 +50,17 @@ class Player:
         if(move.playerMove == self):
             return any(x.name == card.name for x in move.cards)
         # Если отбиваемся
-        return True
+        return card.value > move.cards[len(move.cards)-1]
 
     def __userInput(self, move, isMove):
         currentActionName = 'Ходите' if isMove else 'Отбивайтесь'
         print (f'########## {self.name} -> {currentActionName}, выберите карту: ##########')
+        if(isMove): print ('########## Для завершения хода введите: end')
         while (True):
             cardNumber = input(Card.showCards(self.cards)+': ')
+            if(isMove and cardNumber == 'end'):
+                move.moveOver()
+                return
             card = self.__findCard(cardNumber)
             if(self.__checkAvailable(move, card) and move.add(self, card)):
                 self.cards.remove(card)

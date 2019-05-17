@@ -11,13 +11,11 @@ class Move:
 
     def toStr(self):
         s = ''
-        flag = True
         for x in range(0, len(self.cards)):
-            if(flag): 
-                s+= f'\n {str(x)}) {self.playerMove.name} Ходит '
+            if(x == 0 or x % 2 == 0): 
+                s+= f'\n {str(int(x/2 + 1))}) {self.playerMove.name} Ходит '
             else:
                 s+= f' -> {self.playerDefense.name} Отбивает '
-            flag = not flag
             s+= self.cards[x].fullName()
         s+='\n'
         return s

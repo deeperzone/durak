@@ -21,7 +21,7 @@ class Deck:
             for key,value in self.__cardset.items():
                 if(self.__deckType == DeckType.Card36 and value < 6):
                     continue
-                self.cards.append(Card(key, suit, iterator))
+                self.cards.append(Card(key, suit, iterator, value))
                 iterator += 1
         print (f'Колода заполнена {str(len(self.cards))} картами')
     

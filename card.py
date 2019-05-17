@@ -1,8 +1,9 @@
 class Card:
-    def __init__(self, name, suit, number):
+    def __init__(self, name, suit, number, value):
         self.name = name
         self.suit = suit
         self.number = number
+        self.value = value
 
     def fullName(self):
         return f'{self.suit} {self.name}'

@@ -12,6 +12,9 @@ class Durak(BaseGame):
     def defineTrump(self):
         cardNumber = random.randint(0, len(self._deck.cards) - 1)
         self.trumpCard = self._deck.cards.pop(cardNumber)
+        for card in self._deck.cards:
+            if(card.suit == self.trumpCard.suit):
+                card.value += 100
         print(f'Козырная карта в колоде: {self.trumpCard.fullName()}')
     
     def defineFirstMovePlayer(self):
@@ -56,7 +59,8 @@ durak.handOverCards()
 durak.defineTrump()
 playerMove = durak.defineFirstMovePlayer()
 
-while (input('Enter: ')!= 'exit'):
+command = ''
+while (command != 'exit'):
     playerDefense = durak.nextPlayer(playerMove)
     print (f'Игрок: {playerMove.name} ходит, Игрок: {playerDefense.name} отбивается')
     move = Move(durak.trumpCard, playerMove, playerDefense)
@@ -66,7 +70,8 @@ while (input('Enter: ')!= 'exit'):
         print(move.toStr())
         playerDefense.setCurrentMove(move)
         print(move.toStr())        
-        
+
+    command = input('command: ')    
     # card = player.getCurrentMoveCard(durak.trumpCard)
     # move = Move(durak.trumpCard)
     # move.add(card)

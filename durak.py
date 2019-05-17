@@ -63,7 +63,10 @@ while (input('Enter: ')!= 'exit'):
 
     while(move.isOver == False):
         playerMove.setCurrentMove(move)
-        playerDefense.setCurrentMove(move)        
+        print(move.toStr())
+        playerDefense.setCurrentMove(move)
+        print(move.toStr())        
+        
     # card = player.getCurrentMoveCard(durak.trumpCard)
     # move = Move(durak.trumpCard)
     # move.add(card)

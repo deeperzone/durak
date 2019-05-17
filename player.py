@@ -30,6 +30,7 @@ class Player:
         # Пока кидаем первую карту
         if(self.isBot):
             move.add(self, self.cards.pop(0))
+            print (f'{move.playerDefense.name} думает...')
         else: self.__userInput(move, False)
 
     def __move(self, move):
@@ -38,14 +39,25 @@ class Player:
             move.add(self, card)
             self.cards.remove(card)
         else: self.__userInput(move, True)
-        
+
+    def __checkAvailable(self, move, card):
+        if(card is None): 
+            return False
+        if(len(move.cards) == 0): 
+            return True
+        # Если ходим
+        if(move.playerMove == self):
+            return any(x.name == card.name for x in move.cards)
+        # Если отбиваемся
+        return True
+
     def __userInput(self, move, isMove):
         currentActionName = 'Ходите' if isMove else 'Отбивайтесь'
         print (f'########## {self.name} -> {currentActionName}, выберите карту: ##########')
         while (True):
             cardNumber = input(Card.showCards(self.cards)+': ')
             card = self.__findCard(cardNumber)
-            if(move.add(self, card)):
+            if(self.__checkAvailable(move, card) and move.add(self, card)):
                 self.cards.remove(card)
                 return
             else: print ('Не допустимый ход')

@@ -18,27 +18,41 @@ class Player:
         while (iterator != destLength):
             self.cards.append(deck.cards.pop())
             iterator += 1
+        self.cards = sorted(self.cards, key=lambda x: x.value)
         print (f'Игрок {self.name} взял {str(destLength)} карт')
 
     def setCurrentMove(self, move):
+        if(move.isOver):
+            return
         if(move.playerMove == self):
             self.__move(move)
         else:
             self.__defense(move)
+        print(move.toStr())
 
     def __defense(self, move):
+        if(move.isOver == True):
+            return
+        print (f'{move.playerDefense.name} думает...')
         # Пока кидаем первую карту
         if(self.isBot):
-            move.add(self, self.cards.pop(0))
-            print (f'{move.playerDefense.name} думает...')
+            for card in self.__aiGetCards():
+                if(self.__checkAvailable(move, card)):
+                    self.cards.remove(card)
+                    move.add(self, card)
+                    return
+            self.__getCards(move)
+            self.__moveOver()
         else: self.__userInput(move, False)
 
     def __move(self, move):
         if(self.isBot):
-            card = self.__aiFindCard(move)
-            move.add(self, card)
-            self.cards.remove(card)
-            print (f'{move.playerDefense.name} думает...')
+            for card in self.__aiGetCards(): 
+                if(self.__checkAvailable(move, card)):
+                    move.add(self, card)
+                    self.cards.remove(card)
+                    return
+            move.moveOver()
         else: self.__userInput(move, True)
 
     def __checkAvailable(self, move, card):
@@ -50,16 +64,37 @@ class Player:
         if(move.playerMove == self):
             return any(x.name == card.name for x in move.cards)
         # Если отбиваемся
-        return card.value > move.cards[len(move.cards)-1]
+        cardForDefense = move.cards[len(move.cards)-1]
+        # Ищем старшую карту той же масти
+        if(card.suit == cardForDefense.suit and card.value > cardForDefense.value):
+            return True
+        if(move.trumpCard.suit != cardForDefense.suit  and move.trumpCard.suit == cardForDefense.suit):
+            return True
+        return False
+
+    def __getCards(self, move):
+        move.moveOver()
+        self.cards = self.cards + move.cards
+        print (f'Игрок {self.name} взял карты')
+
+    def __moveOver(self, move):
+        move.moveOver()
+        print (f'Игрок {self.name} завершил ход')
 
     def __userInput(self, move, isMove):
         currentActionName = 'Ходите' if isMove else 'Отбивайтесь'
         print (f'########## {self.name} -> {currentActionName}, выберите карту: ##########')
-        if(isMove): print ('########## Для завершения хода введите: end')
+        if(isMove): 
+            print ('########## Для завершения хода введите: end')
+        else:
+            print ('########## Чтобы взять карты введите: get')
         while (True):
             cardNumber = input(Card.showCards(self.cards)+': ')
-            if(isMove and cardNumber == 'end'):
-                move.moveOver()
+            if(isMove and cardNumber == 'end' and len(move.cards) > 1):
+                self.__moveOver(move)
+                return
+            if(not isMove and cardNumber == 'get'):
+                self.__getCards(move)
                 return
             card = self.__findCard(cardNumber)
             if(self.__checkAvailable(move, card) and move.add(self, card)):
@@ -78,15 +113,13 @@ class Player:
                 return self.cards[i]
         return None
 
-    def __aiFindCard(self, move):
-        minCard = self.__aiGetMin(move, False)
-        if(minCard == None): minCard = self.__aiGetMin(move, True)
-        return minCard
-
     def __aiGetMin(self, move, isTrump):
         cards = list(filter(lambda x: (x.suit == move.trumpCard.suit) == isTrump, self.cards))
         if(len(cards) == 0): return None
         return min(cards, key=lambda x: x.number)
+
+    def __aiGetCards(self):
+        return sorted(self.cards, key=lambda x: x.value)
 
         
 

@@ -55,8 +55,8 @@ class Durak(BaseGame):
 durak = Durak([Player('Иван'), Player('bot', True)], DeckType.Card36, 6)
 durak.fillDeck()
 durak.shuffleDeck()
-durak.handOverCards()
 durak.defineTrump()
+durak.handOverCards()
 playerMove = durak.defineFirstMovePlayer()
 
 command = ''
@@ -67,9 +67,7 @@ while (command != 'exit'):
 
     while(move.isOver == False):
         playerMove.setCurrentMove(move)
-        print(move.toStr())
         playerDefense.setCurrentMove(move)
-        print(move.toStr())        
 
     command = input('command: ')    
     # card = player.getCurrentMoveCard(durak.trumpCard)

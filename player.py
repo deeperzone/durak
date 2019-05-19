@@ -29,12 +29,12 @@ class Player:
             return
         if(move.playerMove == self):
             self.__move(move)
-            if(self.isBot and not move.isOver):
-                print(move.toStr(self, True))
+            if(self.isBot):
+                move.printMove(self, True)
         else:
             self.__defense(move)
             if(self.isBot):
-                print(move.toStr(self, False))
+                move.printMove(self, False)
 
     def __defense(self, move):
         if(move.isOver == True):
@@ -46,8 +46,10 @@ class Player:
                     move.add(self, card)
                     return
             self.__getCards(move)
-        else: 
+        else:
+            print()
             self.__userInput(move, False)
+            print()
 
     def __move(self, move):
         if(self.isBot):
@@ -60,7 +62,9 @@ class Player:
                     return
             self.__moveOver(move)
         else: 
+            print()
             self.__userInput(move, True)
+            print()
 
     def __checkAvailable(self, move, moveCard):
         if(moveCard is None): 

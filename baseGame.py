@@ -18,4 +18,3 @@ class BaseGame:
     def handOverCards(self):
         for player in self._players:
             player.handOverCards(self._deck, self._cardsInHand)
-        print()

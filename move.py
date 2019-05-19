@@ -9,20 +9,23 @@ class Move:
     def moveOver(self):
         self.isOver = True
 
-    def toStr(self, player, isMove):
+    def printMove(self, player, isMove):
         s = ''
         for x in range(0, len(self.cards)):
             if(x == 0 or x % 2 == 0):
-                s+= f'\n{str(int(x/2 + 1))}) {self.playerMove.name} Ходит '
+                separator = '' if x == 0 else '\n'
+                s+= f'{separator}{str(int(x/2 + 1))}) {self.playerMove.name} Ходит '
             else:
                 s+= f' -> {self.playerDefense.name} Отбивает '
             s+= self.cards[x].fullName()
+        print (s)
         if(player is not None and self.isOver):
+            print()
             if(isMove):
-                s+=f'\n\033[42mИгрок {player.name} завершил ход\033[00m'
+                print(f'\033[42mИгрок {player.name} завершил ход\033[00m')
             else:
-                s+=f'\n\033[41mИгрок {player.name} взял(-а) карты\033[00m'
-        return s+'\n'
+                print(f'\033[41mИгрок {player.name} взял(-а) карты\033[00m')
+            print()
 
     def add(self, player, card):
         if(self.__checkMoveCard(card) == False):

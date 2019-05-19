@@ -4,12 +4,13 @@ class Player:
     def __init__(self, name, isBot = False):
         self.name = name
         self.isBot = isBot
+        self.cards = []
     
     def handOverCards(self, deck, count):
+        self.cards = sorted(self.cards, key=lambda x: x.value)
         if(len(deck.cards) == 0):
             print ('В колоде нет карт!')
             return
-        self.cards = []
         destLength = count - len(self.cards)
         iterator = 0
         if(destLength <= 0):
@@ -18,7 +19,6 @@ class Player:
         while (iterator != destLength):
             self.cards.append(deck.cards.pop())
             iterator += 1
-        self.cards = sorted(self.cards, key=lambda x: x.value)
         print (f'Игрок {self.name} взял {str(destLength)} карт')
 
     def setCurrentMove(self, move):
@@ -42,7 +42,7 @@ class Player:
                     move.add(self, card)
                     return
             self.__getCards(move)
-            self.__moveOver()
+            self.__moveOver(move)
         else: self.__userInput(move, False)
 
     def __move(self, move):
@@ -55,20 +55,20 @@ class Player:
             move.moveOver()
         else: self.__userInput(move, True)
 
-    def __checkAvailable(self, move, card):
-        if(card is None): 
+    def __checkAvailable(self, move, moveCard):
+        if(moveCard is None): 
             return False
         if(len(move.cards) == 0): 
             return True
         # Если ходим
         if(move.playerMove == self):
-            return any(x.name == card.name for x in move.cards)
+            return any(x.name == moveCard.name for x in move.cards)
         # Если отбиваемся
         cardForDefense = move.cards[len(move.cards)-1]
         # Ищем старшую карту той же масти
-        if(card.suit == cardForDefense.suit and card.value > cardForDefense.value):
+        if(moveCard.suit == cardForDefense.suit and moveCard.value > cardForDefense.value):
             return True
-        if(move.trumpCard.suit != cardForDefense.suit  and move.trumpCard.suit == cardForDefense.suit):
+        if(move.trumpCard.suit != cardForDefense.suit and move.trumpCard.suit == moveCard.suit):
             return True
         return False
 

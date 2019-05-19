@@ -59,8 +59,7 @@ durak.defineTrump()
 durak.handOverCards()
 playerMove = durak.defineFirstMovePlayer()
 
-command = ''
-while (command != 'exit'):
+while (True):
     playerDefense = durak.nextPlayer(playerMove)
     print (f'Игрок: {playerMove.name} ходит, Игрок: {playerDefense.name} отбивается')
     move = Move(durak.trumpCard, playerMove, playerDefense)
@@ -68,8 +67,7 @@ while (command != 'exit'):
     while(move.isOver == False):
         playerMove.setCurrentMove(move)
         playerDefense.setCurrentMove(move)
-
-    command = input('command: ')    
+    durak.handOverCards()
     # card = player.getCurrentMoveCard(durak.trumpCard)
     # move = Move(durak.trumpCard)
     # move.add(card)

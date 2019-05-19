@@ -30,12 +30,12 @@ class Player:
         if(move.playerMove == self):
             self.__move(move)
             if(self.isBot and not move.isOver):
-                print(move.toStr())
+                print(move.toStr(self, True))
         else:
             self.__defense(move)
             if(self.isBot):
-                print(move.toStr())
-            
+                print(move.toStr(self, False))
+
     def __defense(self, move):
         if(move.isOver == True):
             return
@@ -82,11 +82,9 @@ class Player:
     def __getCards(self, move):
         move.moveOver()
         self.cards = self.cards + move.cards
-        print (f'\n\033[41mИгрок {self.name} взял(-а) карты\033[00m')
 
     def __moveOver(self, move):
         move.moveOver()
-        print (f'\n\033[42mИгрок {self.name} завершил ход\033[00m')
 
     def __userInput(self, move, isMove):
         currentActionName = f'\033[92mВаш ход, {self.name}\033[00m' if isMove else f'\033[91mОтбивайтесь, {self.name}\033[00m'

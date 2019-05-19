@@ -17,6 +17,12 @@ class Deck:
     def fillDeck(self):
         self.cards = []
         iterator = 1
+
+        # # TODO убрать
+        # self.cards.append(Card('6', '♥', 1, 1))
+        # self.cards.append(Card('7', '♥', 1, 2))
+        # return
+
         for suit in self.__suits:
             for key,value in self.__cardset.items():
                 if(self.__deckType == DeckType.Card36 and value < 6):

@@ -9,7 +9,7 @@ class Move:
     def moveOver(self):
         self.isOver = True
 
-    def toStr(self):
+    def toStr(self, player, isMove):
         s = ''
         for x in range(0, len(self.cards)):
             if(x == 0 or x % 2 == 0):
@@ -17,6 +17,11 @@ class Move:
             else:
                 s+= f' -> {self.playerDefense.name} Отбивает '
             s+= self.cards[x].fullName()
+        if(player is not None and self.isOver):
+            if(isMove):
+                s+=f'\n\033[42mИгрок {player.name} завершил ход\033[00m'
+            else:
+                s+=f'\n\033[41mИгрок {player.name} взял(-а) карты\033[00m'
         return s+'\n'
 
     def add(self, player, card):

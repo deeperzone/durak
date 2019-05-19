@@ -76,22 +76,22 @@ class Durak(BaseGame):
             if(len(player.cards) > 0):
                 playersWithCard.append(player)
         if(len(playersWithCard) == 1): 
-            print (f'\n\033[44m\033[91mИгрок {playersWithCard[0].name} проиграл! Игра закончена.\033[00m')
+            input (f'\033[44m\033[91mИгрок {playersWithCard[0].name} проиграл! Игра закончена.\033[00m')
             return True
         elif(len(playersWithCard) == 0):
-            print ('\n\033[44m\033[91mИгроки сыграли в ничью!\033[00m')
+            input ('\033[44m\033[91mИгроки сыграли в ничью!\033[00m')
             return True
         else: 
             return False
 
 clear()
 name = input('Введите имя игрока: ')
+# TODO вернуть 6 карт
 durak = Durak([Player(name), Player('bot', True)], DeckType.Card36, 6)
 durak.fillDeck()
 durak.shuffleDeck()
 durak.defineTrump()
 durak.handOverCards()
-
 move = None
 loser = None
 while (not loser):
@@ -100,9 +100,11 @@ while (not loser):
     playerDefense = players[1]
     move = Move(durak.trumpCard, playerMove, playerDefense)
 
-    while(move.isOver == False):
+    while(move.isOver == False and not loser):
         playerMove.setCurrentMove(move)
         playerDefense.setCurrentMove(move)
+        loser = durak.checkLoserExist()
+    
+    if(loser): break
+    
     durak.handOverCards()
-    loser = durak.checkLoserExist()
-    # durak.clear()

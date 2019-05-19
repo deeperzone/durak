@@ -1,13 +1,15 @@
 from card import Card
 
 class Player:
+    GETTEXT = 'беру'
+    PASSTEXT = 'бита'
+
     def __init__(self, name, isBot = False):
         self.name = name
         self.isBot = isBot
         self.cards = []
-    
+
     def handOverCards(self, deck, count):
-        self.cards = sorted(self.cards, key=lambda x: x.value)
         if(len(deck.cards) == 0):
             print ('В колоде нет карт!')
             return
@@ -16,25 +18,27 @@ class Player:
         if(destLength <= 0):
             print (f'Игроку {self.name} не нужны карты')
             return
-        while (iterator != destLength):
+        while (iterator != destLength and len(deck.cards) != 0):
             self.cards.append(deck.cards.pop())
             iterator += 1
-        print (f'Игрок {self.name} взял {str(destLength)} карт')
+        print (f'Игрок {self.name} взял(-а) {str(destLength)} карт')
 
     def setCurrentMove(self, move):
+        self.cards = sorted(self.cards, key=lambda x: x.value)
         if(move.isOver):
             return
         if(move.playerMove == self):
             self.__move(move)
+            if(self.isBot and not move.isOver):
+                print(move.toStr())
         else:
             self.__defense(move)
-        print(move.toStr())
-
+            if(self.isBot):
+                print(move.toStr())
+            
     def __defense(self, move):
         if(move.isOver == True):
             return
-        print (f'{move.playerDefense.name} думает...')
-        # Пока кидаем первую карту
         if(self.isBot):
             for card in self.__aiGetCards():
                 if(self.__checkAvailable(move, card)):
@@ -42,18 +46,21 @@ class Player:
                     move.add(self, card)
                     return
             self.__getCards(move)
-            self.__moveOver(move)
-        else: self.__userInput(move, False)
+        else: 
+            self.__userInput(move, False)
 
     def __move(self, move):
         if(self.isBot):
             for card in self.__aiGetCards(): 
+                if(card.suit == move.trumpCard.suit and len(move.cards) > 0):
+                    continue
                 if(self.__checkAvailable(move, card)):
                     move.add(self, card)
                     self.cards.remove(card)
                     return
-            move.moveOver()
-        else: self.__userInput(move, True)
+            self.__moveOver(move)
+        else: 
+            self.__userInput(move, True)
 
     def __checkAvailable(self, move, moveCard):
         if(moveCard is None): 
@@ -75,25 +82,27 @@ class Player:
     def __getCards(self, move):
         move.moveOver()
         self.cards = self.cards + move.cards
-        print (f'Игрок {self.name} взял карты')
+        print (f'\n\033[41mИгрок {self.name} взял(-а) карты\033[00m')
 
     def __moveOver(self, move):
         move.moveOver()
-        print (f'Игрок {self.name} завершил ход')
+        print (f'\n\033[42mИгрок {self.name} завершил ход\033[00m')
 
     def __userInput(self, move, isMove):
-        currentActionName = 'Ходите' if isMove else 'Отбивайтесь'
-        print (f'########## {self.name} -> {currentActionName}, выберите карту: ##########')
-        if(isMove): 
-            print ('########## Для завершения хода введите: end')
-        else:
-            print ('########## Чтобы взять карты введите: get')
+        currentActionName = f'\033[92mВаш ход, {self.name}\033[00m' if isMove else f'\033[91mОтбивайтесь, {self.name}\033[00m'
+        if(isMove and len(move.cards) > 0): 
+            print (f'########## Для завершения хода введите команду: \033[95m{self.PASSTEXT}\033[00m')
+        elif(not isMove):
+            print (f'########## Чтобы взять карты введите команду: \033[95m{self.GETTEXT}\033[00m')
+        print (f'########## Козырная карта: {move.trumpCard.fullName()}')
+        print (f'########## {currentActionName}. Введите номер карты ##########')
         while (True):
-            cardNumber = input(Card.showCards(self.cards)+': ')
-            if(isMove and cardNumber == 'end' and len(move.cards) > 1):
+            Card.showCards(self.cards)
+            cardNumber = input(': ')
+            if(isMove and cardNumber == self.PASSTEXT and len(move.cards) > 1):
                 self.__moveOver(move)
                 return
-            if(not isMove and cardNumber == 'get'):
+            if(not isMove and cardNumber == self.GETTEXT):
                 self.__getCards(move)
                 return
             card = self.__findCard(cardNumber)

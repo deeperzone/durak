@@ -53,7 +53,7 @@ class Player:
             card = self.deck.pop()
             self.cards.append(card)
             if(withLog == True):
-                print('Игрок ' + self.name + ' взял карту ' + card.cardName())
+                print('Игрок ' + self.name + ' взял(-а) карту ' + card.cardName())
 
 def fillCards(suits):
     deck = []

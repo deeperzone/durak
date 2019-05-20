@@ -3,6 +3,7 @@ from deck import DeckType
 from player import Player
 from move import Move
 from os import system, name
+from console import print_
 import random
 
 # define our clear function 
@@ -23,11 +24,11 @@ class Durak(BaseGame):
         for card in self._deck.cards:
             if(card.suit == self.trumpCard.suit):
                 card.value += 100
-        print(f'Козырная карта в колоде: {self.trumpCard.fullName()}')
+        print_(f'Козырная карта в колоде: {self.trumpCard.fullName()}')
     
     def __defineFirstMovePlayer(self):
         if (self.trumpCard == None):
-            print ('Козырь не определён!')
+            print_ ('Козырь не определён!')
             return None
         minPlayerCard = {}
         for player in self._players:
@@ -37,7 +38,7 @@ class Durak(BaseGame):
             minPlayerCard[player] = minCard
         playerFirstMove = min(minPlayerCard.items(), key=lambda x: x[1].number, default=None)
         if(playerFirstMove is None):
-            print ('У игроков нет козырей. Определяем случайным образом')
+            print_ ('У игроков нет козырей. Определяем случайным образом')
             index = random.randint(0, len(self._players)-1)
             playerFirstMove = self._players[index]
         else:
@@ -46,7 +47,7 @@ class Durak(BaseGame):
 
     def __nextPlayer(self):
         if(len(self._players) < 2):
-            print ('Для игры необходимо минимум 2 игрока!')
+            print_ ('Для игры необходимо минимум 2 игрока!')
             return  
 
         try:
@@ -56,7 +57,7 @@ class Durak(BaseGame):
             return self.__currentPlayer
 
         if(self.__currentPlayer is None):
-            print ('Не определен игрок, который ходит первым!')
+            print_ ('Не определен игрок, который ходит первым!')
             return    
         index = self._players.index(self.__currentPlayer) + 1
         if(index > len(self._players) - 1):

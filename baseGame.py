@@ -1,5 +1,6 @@
 from deck import Deck, DeckType
 from player import Player
+from console import print_
 import random
 
 class BaseGame: 
@@ -16,5 +17,7 @@ class BaseGame:
         self._deck.shuffleDeck()
 
     def handOverCards(self):
+        s = ''
         for player in self._players:
-            player.handOverCards(self._deck, self._cardsInHand)
+            s += player.handOverCards(self._deck, self._cardsInHand)
+        print_(s.rstrip(), endWith='\n', startWith='\n')

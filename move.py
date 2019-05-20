@@ -1,3 +1,5 @@
+from console import print_
+
 class Move:
     def __init__(self, trumpCard, playerMove, playerDefense):
         self.trumpCard = trumpCard
@@ -9,23 +11,22 @@ class Move:
     def moveOver(self):
         self.isOver = True
 
-    def printMove(self, player, isMove):
-        s = ''
-        for x in range(0, len(self.cards)):
-            if(x == 0 or x % 2 == 0):
-                separator = '' if x == 0 else '\n'
-                s+= f'{separator}{str(int(x/2 + 1))}) {self.playerMove.name} Ходит '
-            else:
-                s+= f' -> {self.playerDefense.name} Отбивает '
-            s+= self.cards[x].fullName()
-        print (s)
+    def print_Move(self, player, isMove):
+        if(player.isBot):
+            s = ''
+            for x in range(0, len(self.cards)):
+                if(x == 0 or x % 2 == 0):
+                    separator = '' if x == 0 else '\n'
+                    s+= f'{separator}{str(int(x/2 + 1))}) {self.playerMove.name} Ходит '
+                else:
+                    s+= f' -> {self.playerDefense.name} Отбивает '
+                s+= self.cards[x].fullName()
+            print_ (s, startWith='\n', endWith='\n')
         if(player is not None and self.isOver):
-            print()
             if(isMove):
-                print(f'\033[42mИгрок {player.name} завершил ход\033[00m')
+                print_(f'\033[42mИгрок {player.name} завершил ход\033[00m', startWith='\n', endWith='\n')
             else:
-                print(f'\033[41mИгрок {player.name} взял(-а) карты\033[00m')
-            print()
+                print_(f'\033[41mИгрок {player.name} взял(-а) карты\033[00m', startWith='\n', endWith='\n')
 
     def add(self, player, card):
         if(self.__checkMoveCard(card) == False):

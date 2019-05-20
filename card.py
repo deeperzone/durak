@@ -1,4 +1,4 @@
-from colorama import init
+from console import print_
 
 class Card:
     def __init__(self, name, suit, number, value):
@@ -6,7 +6,6 @@ class Card:
         self.suit = suit
         self.number = number
         self.value = value
-        init()
 
     def fullName(self):
         if(self.suit in ['♦','♥']): color = '\033[91m'
@@ -16,9 +15,9 @@ class Card:
     @staticmethod
     def showCards(cards):
         cardLength = len(cards)
-        print(' ', end='')
+        print_(' ', end='')
         for x in range(0, cardLength):
             card = cards[x]
             separator = '  '
             if(x == cardLength-1): separator = ''
-            print(f'\033[96m{card.number}\033[00m.{card.fullName()}{separator}', end='')  
+            print_(f'\033[96m{card.number}\033[00m.{card.fullName()}{separator}', end='')  

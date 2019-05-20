@@ -1,5 +1,6 @@
 from enum import Enum
 from card import Card
+from console import print_
 import random
 
 class DeckType(Enum):
@@ -29,11 +30,11 @@ class Deck:
                     continue
                 self.cards.append(Card(key, suit, iterator, value))
                 iterator += 1
-        print (f'Колода заполнена {str(len(self.cards))} картами')
+        print_ (f'Колода заполнена {str(len(self.cards))} картами')
     
     def shuffleDeck(self):
         if(len(self.cards) == 0):
-            print ('В колоде нет карт!')
+            print_ ('В колоде нет карт!')
             return
         random.shuffle(self.cards)
-        print ('Колода перемешана')
+        print_ ('Колода перемешана')

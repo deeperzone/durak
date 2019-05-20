@@ -1,3 +1,3 @@
-l = [1,2,3,4]
+from console import print_
 
-print (l % 2)
+print_('asdasda')

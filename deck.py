@@ -19,7 +19,7 @@ class Deck:
         self.cards = []
         iterator = 1
 
-        # # TODO убрать
+        # # # TODO для тестов
         # self.cards.append(Card('6', '♥', 1, 1))
         # self.cards.append(Card('7', '♥', 1, 2))
         # return

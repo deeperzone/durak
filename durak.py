@@ -76,36 +76,44 @@ class Durak(BaseGame):
         for player in self._players:
             if(len(player.cards) > 0):
                 playersWithCard.append(player)
-        if(len(playersWithCard) == 1): 
-            input (f'\033[44m\033[91mИгрок {playersWithCard[0].name} проиграл! Игра закончена.\033[00m')
-            return True
+        if(len(playersWithCard) == 1):
+            print_ (f'\033[44m\033[91mИгрок {playersWithCard[0].name} проиграл! Игра закончена.\033[00m', startWith='\n', endWith='\n')
+            command = input ('Для завершения игры введите команду \033[95mвыход\033[00m, для начала новой введите любую команду: ')
+            return (True, command)
         elif(len(playersWithCard) == 0):
-            input ('\033[44m\033[91mИгроки сыграли в ничью!\033[00m')
-            return True
+            print_ ('\033[44m\033[91mИгроки сыграли в ничью!\033[00m', startWith='\n', endWith='\n')
+            command = input ('Для завершения игры введите команду \033[95mвыход\033[00m, для начала новой введите любую команду: ')
+            return (True, command)
         else: 
-            return False
+            return (False, None)
 
-clear()
-name = input('Введите имя игрока: ')
-# TODO вернуть 6 карт
-durak = Durak([Player(name), Player('bot', True)], DeckType.Card36, 6)
-durak.fillDeck()
-durak.shuffleDeck()
-durak.defineTrump()
-durak.handOverCards()
-move = None
-loser = None
-while (not loser):
-    players = durak.nextPlayers(move)
-    playerMove = players[0]
-    playerDefense = players[1]
-    move = Move(durak.trumpCard, playerMove, playerDefense)
-
-    while(move.isOver == False and not loser):
-        playerMove.setCurrentMove(move)
-        playerDefense.setCurrentMove(move)
-        loser = durak.checkLoserExist()
-    
-    if(loser): break
-    
+def startGame():
+    clear()
+    name = input('Введите имя игрока: ')
+    # TODO для тестов ставить 1 карту
+    durak = Durak([Player(name), Player('bot', True)], DeckType.Card36, 6)
+    durak.fillDeck()
+    durak.shuffleDeck()
+    durak.defineTrump()
     durak.handOverCards()
+    move = None
+    loser = (None, None)
+    while (not loser[0]):
+        players = durak.nextPlayers(move)
+        playerMove = players[0]
+        playerDefense = players[1]
+        move = Move(durak.trumpCard, playerMove, playerDefense)
+
+        while(move.isOver == False and not loser[0]):
+            playerMove.setCurrentMove(move)
+            playerDefense.setCurrentMove(move)
+            loser = durak.checkLoserExist()
+
+        if(loser[0]):
+            if(loser[1]!='выход'): startGame()
+            return
+        
+        durak.handOverCards()
+
+# Точка входа
+startGame()

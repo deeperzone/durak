@@ -1,3 +1,5 @@
-from console import print_
 
-print_('asdasda')
+
+import sys
+
+print (sys.version) 

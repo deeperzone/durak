@@ -1,3 +1,6 @@
+#!/usr/bin/pythonw
+# -*- coding: utf-8 -*-
+
 from baseGame import BaseGame
 from deck import DeckType
 from player import Player
@@ -12,6 +15,10 @@ def clear():
         _ = system('cls') 
     else: 
         _ = system('clear') 
+
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
 class Durak(BaseGame):
     def __init__(self, players, deckType, cardsInHand):
         super(Durak, self).__init__(players, deckType, cardsInHand)
@@ -24,8 +31,9 @@ class Durak(BaseGame):
         for card in self._deck.cards:
             if(card.suit == self.trumpCard.suit):
                 card.value += 100
-        print_(f'Козырная карта в колоде: {self.trumpCard.fullName()}')
-    
+        # print_(f'Козырная карта в колоде: {self.trumpCard.fullName()}')
+        print_('Козырная карта в колоде:')
+
     def __defineFirstMovePlayer(self):
         if (self.trumpCard == None):
             print_ ('Козырь не определён!')

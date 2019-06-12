@@ -8,6 +8,6 @@
 ## Require:
     - Python 3+ version
     - Colorama (python package, for colored console output)
-## How to run
+## How to run a game
 1. Install depedency -> pip install colorama
 2. Run script -> python durak.py

@@ -1,9 +1,10 @@
 from card import Card
 from console import print_
+from translation import getText
 
 class Player:
-    GETTEXT = 'беру'
-    PASSTEXT = 'бита'
+    TAKETEXT = getText('TAKE')
+    PASSTEXT = getText('PASS')
 
     def __init__(self, name, isBot = False):
         self.name = name
@@ -13,17 +14,17 @@ class Player:
     def handOverCards(self, deck, count):
         s = ''
         if(len(deck.cards) == 0):
-            s += 'В колоде нет карт!\n'
+            s += getText('NO_CARDS_IN_DECK') + '\n'
             return s
         destLength = count - len(self.cards)
         iterator = 0
         if(destLength <= 0):
-            s += f'Игроку {self.name} не нужны карты\n'
+            s += getText('PLAYER_DOESNT_NEED_CARDS').format(self.name) + '\n'
             return s
         while (iterator != destLength and len(deck.cards) != 0):
             self.cards.append(deck.cards.pop())
             iterator += 1
-        s += f'Игрок {self.name} взял(-а) {str(destLength)} карт из колоды\n'
+        s += getText('PLAYER_TAKE_COUNT_CARDS').format(self.name, str(destLength)) + '\n'
         return s
 
     def setCurrentMove(self, move):
@@ -68,12 +69,12 @@ class Player:
             return False
         if(len(move.cards) == 0): 
             return True
-        # Если ходим
+        # If move
         if(move.playerMove == self):
             return any(x.name == moveCard.name for x in move.cards)
-        # Если отбиваемся
+        # If defense
         cardForDefense = move.cards[len(move.cards)-1]
-        # Ищем старшую карту той же масти
+        # Find the higher card same suit
         if(moveCard.suit == cardForDefense.suit and moveCard.value > cardForDefense.value):
             return True
         if(move.trumpCard.suit != cardForDefense.suit and move.trumpCard.suit == moveCard.suit):
@@ -88,27 +89,28 @@ class Player:
         move.moveOver()
 
     def __userInput(self, move, isMove):
-        currentActionName = f'\033[92mВаш ход, {self.name}\033[00m' if isMove else f'\033[91mОтбивайтесь, {self.name}\033[00m'
+        currentActionName = getText('YOUR_TURN').format('\033[92m', self.name, '\033[00m') if isMove else getText('YOUR_DEFENSE').format('\033[91m', self.name, '\033[00m')
+        spacer = '##########'
         if(isMove and len(move.cards) > 0): 
-            print_ (f'########## Для завершения хода введите команду: \033[95m{self.PASSTEXT}\033[00m')
+            print_ (getText('ENTER_COMMAND_FOR_END_MOVE').format(spacer, '\033[95m', self.PASSTEXT, '\033[00m'))
         elif(not isMove):
-            print_ (f'########## Чтобы взять карты введите команду: \033[95m{self.GETTEXT}\033[00m')
-        print_ (f'########## Козырная карта: {move.trumpCard.fullName()}')
-        print_ (f'########## {currentActionName}. Введите номер карты ##########')
+            print_ (getText('ENTER_COMMAND_FOR_TAKE_CARDS').format(spacer, '\033[95m', self.TAKETEXT, '\033[00m'))
+        print_ (getText('SHOW_TRUMP_CARD').format(spacer, move.trumpCard.fullName()))
+        print_ (getText('ENTER_CARD_NUMBER').format(spacer, currentActionName))
         while (True):
             Card.showCards(self.cards)
             cardNumber = input(': ')
             if(isMove and cardNumber == self.PASSTEXT and len(move.cards) > 1):
                 self.__moveOver(move)
                 return
-            if(not isMove and cardNumber == self.GETTEXT):
+            if(not isMove and cardNumber == self.TAKETEXT):
                 self.__getCards(move)
                 return
             card = self.__findCard(cardNumber)
             if(self.__checkAvailable(move, card) and move.add(self, card)):
                 self.cards.remove(card)
                 return
-            else: print_ ('Не допустимый ход')
+            else: print_ (getText('WRONG_MOVE'))
 
     def __findCard(self, cardNumber):
         try:

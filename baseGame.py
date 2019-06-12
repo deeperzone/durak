@@ -1,11 +1,12 @@
 from deck import Deck, DeckType
 from player import Player
 from console import print_
+from translation import getText
 import random
 
 class BaseGame: 
     def __init__(self, players, deckType, cardsInHand):
-        if(type(deckType) != DeckType): raise Exception('Не удалось определить колоду')
+        if(type(deckType) != DeckType): raise Exception(getText('CANT_DEFINE_DECK'))
         self._players = players
         self._deck = Deck(deckType)
         self._cardsInHand = cardsInHand

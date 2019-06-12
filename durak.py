@@ -7,6 +7,7 @@ from player import Player
 from move import Move
 from os import system, name
 from console import print_
+from translation import getText, checkLanguageAvailable, setLanguage, getAvailableLanguages
 import random
 
 # define our clear function 
@@ -31,12 +32,11 @@ class Durak(BaseGame):
         for card in self._deck.cards:
             if(card.suit == self.trumpCard.suit):
                 card.value += 100
-        # print_(f'Козырная карта в колоде: {self.trumpCard.fullName()}')
-        print_('Козырная карта в колоде:')
+        print_(getText('TRUMP_CARD_IN_DECK').format(self.trumpCard.fullName()))
 
     def __defineFirstMovePlayer(self):
         if (self.trumpCard == None):
-            print_ ('Козырь не определён!')
+            print_ (getText('TRUMP_NOT_DEFINED'))
             return None
         minPlayerCard = {}
         for player in self._players:
@@ -46,7 +46,7 @@ class Durak(BaseGame):
             minPlayerCard[player] = minCard
         playerFirstMove = min(minPlayerCard.items(), key=lambda x: x[1].number, default=None)
         if(playerFirstMove is None):
-            print_ ('У игроков нет козырей. Определяем случайным образом')
+            print_ (getText('PLAYERS_HAVE_NOT_TRUMPS'))
             index = random.randint(0, len(self._players)-1)
             playerFirstMove = self._players[index]
         else:
@@ -55,8 +55,8 @@ class Durak(BaseGame):
 
     def __nextPlayer(self):
         if(len(self._players) < 2):
-            print_ ('Для игры необходимо минимум 2 игрока!')
-            return  
+            print_ (getText('NEED_TWO_PLAYERS'))
+            return
 
         try:
             self.__currentPlayer
@@ -65,7 +65,7 @@ class Durak(BaseGame):
             return self.__currentPlayer
 
         if(self.__currentPlayer is None):
-            print_ ('Не определен игрок, который ходит первым!')
+            print_ (getText('FIRST_PLAYER_NOT_DEFINED'))
             return    
         index = self._players.index(self.__currentPlayer) + 1
         if(index > len(self._players) - 1):
@@ -85,20 +85,31 @@ class Durak(BaseGame):
             if(len(player.cards) > 0):
                 playersWithCard.append(player)
         if(len(playersWithCard) == 1):
-            print_ (f'\033[44m\033[91mИгрок {playersWithCard[0].name} проиграл! Игра закончена.\033[00m', startWith='\n', endWith='\n')
-            command = input ('Для завершения игры введите команду \033[95mвыход\033[00m, для начала новой введите любую команду: ')
+            print_ (getText('PLAYER_LOSE').format('\033[44m', '\033[91m', playersWithCard[0].name, '\033[00m'), startWith='\n', endWith='\n')
+            command = input (getText('END_OR_RESTART_GAME').format('\033[95m', '\033[00m'))
             return (True, command)
         elif(len(playersWithCard) == 0):
-            print_ ('\033[44m\033[91mИгроки сыграли в ничью!\033[00m', startWith='\n', endWith='\n')
-            command = input ('Для завершения игры введите команду \033[95mвыход\033[00m, для начала новой введите любую команду: ')
+            print_ (getText('PLAYERS_PLAY_DRAW').format('\033[44m', '\033[91m', '\033[00m'), startWith='\n', endWith='\n')
+            command = input (getText('END_OR_RESTART_GAME').format('\033[95m', '\033[00m'))
             return (True, command)
         else: 
             return (False, None)
 
 def startGame():
+    # Select game language
+    language_exist = False
+    while (not language_exist):
+        language = input(getText('SELECT_LANGUAGE').format(getAvailableLanguages()))
+        if(checkLanguageAvailable(language)):
+            setLanguage(language)
+            language_exist = True
+        else:
+            print_ (getText('WRONG_LANGUAGE'))
+
     clear()
-    name = input('Введите имя игрока: ')
-    # TODO для тестов ставить 1 карту
+
+    name = input(getText('PLAYER_NAME'))
+    # TODO for tests set 1 card
     durak = Durak([Player(name), Player('bot', True)], DeckType.Card36, 6)
     durak.fillDeck()
     durak.shuffleDeck()
@@ -118,10 +129,10 @@ def startGame():
             loser = durak.checkLoserExist()
 
         if(loser[0]):
-            if(loser[1]!='выход'): startGame()
+            if(loser[1]!=getText('EXIT')): startGame()
             return
         
         durak.handOverCards()
 
-# Точка входа
+# Enter point
 startGame()

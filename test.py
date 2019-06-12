@@ -1,5 +1,4 @@
 
 
-import sys
-
-print (sys.version) 
+s = 'Hello, {0} {1}!'.format('Vasj', 'lol')
+print (s)

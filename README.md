@@ -1,13 +1,13 @@
-Simple Russian game - "Durak"
-Game support only one mode:
+# Simple Russian game "Durak"
+## Support mode:
     - Player VS Bot
-Translation:
+## Translations:
     - English
     - Russian
     - Other (can be extended)
-Require:
+## Require:
     - Python 3+ version
     - Colorama (python package, for colored console output)
-
+## How to run
 1. Install depedency -> pip install colorama
 2. Run script -> python durak.py

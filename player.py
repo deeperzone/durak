@@ -3,9 +3,6 @@ from console import print_
 from translation import getText
 
 class Player:
-    TAKETEXT = getText('TAKE')
-    PASSTEXT = getText('PASS')
-
     def __init__(self, name, isBot = False):
         self.name = name
         self.isBot = isBot
@@ -89,21 +86,24 @@ class Player:
         move.moveOver()
 
     def __userInput(self, move, isMove):
+        taketext = getText('TAKE')
+        passtext = getText('PASS')
+
         currentActionName = getText('YOUR_TURN').format('\033[92m', self.name, '\033[00m') if isMove else getText('YOUR_DEFENSE').format('\033[91m', self.name, '\033[00m')
         spacer = '##########'
         if(isMove and len(move.cards) > 0): 
-            print_ (getText('ENTER_COMMAND_FOR_END_MOVE').format(spacer, '\033[95m', self.PASSTEXT, '\033[00m'))
+            print_ (getText('ENTER_COMMAND_FOR_END_MOVE').format(spacer, '\033[95m', passtext, '\033[00m'))
         elif(not isMove):
-            print_ (getText('ENTER_COMMAND_FOR_TAKE_CARDS').format(spacer, '\033[95m', self.TAKETEXT, '\033[00m'))
+            print_ (getText('ENTER_COMMAND_FOR_TAKE_CARDS').format(spacer, '\033[95m', taketext, '\033[00m'))
         print_ (getText('SHOW_TRUMP_CARD').format(spacer, move.trumpCard.fullName()))
         print_ (getText('ENTER_CARD_NUMBER').format(spacer, currentActionName))
         while (True):
             Card.showCards(self.cards)
             cardNumber = input(': ')
-            if(isMove and cardNumber == self.PASSTEXT and len(move.cards) > 1):
+            if(isMove and cardNumber == passtext and len(move.cards) > 1):
                 self.__moveOver(move)
                 return
-            if(not isMove and cardNumber == self.TAKETEXT):
+            if(not isMove and cardNumber == taketext):
                 self.__getCards(move)
                 return
             card = self.__findCard(cardNumber)

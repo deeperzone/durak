@@ -11,7 +11,7 @@
 ## How to run a game
 1. Install depedency -> pip install colorama
 2. Run script -> python durak.py
-## Hot to run in docker
-1. Build image from Docker file `docker build . -t durak:v1`
-2. Create container from *durak* image `docker create --name durak -it durak:v1`
-3. Start container *durak* `docker start durak -i`
+## How to run in docker
+1. Build image from Dockerfile `docker build . -t durak:v1`
+2. Create container from **durak** image `docker create --name durak -it durak:v1`
+3. Start container **durak** `docker start durak -i`

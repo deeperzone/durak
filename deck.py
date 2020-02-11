@@ -10,7 +10,7 @@ class DeckType(Enum):
 
 class Deck:
     __suits = ['♦','♥','♣','♠']
-    __cardset = {'2': 2,'3': 3,'4': 4,'5': 5,'6': 6,'7': 7,'8': 8,'9': 9,'10': 10,'В': 11,'Д': 12,'К': 13,'Т': 14}
+    __cardset = {'2': 2,'3': 3,'4': 4,'5': 5,'6': 6,'7': 7,'8': 8,'9': 9,'10': 10,'J': 11,'Q': 12,'K': 13,'A': 14}
 
     def __init__(self, deckType):
         if(type(deckType) != DeckType): raise Exception(getText('INCORRECT_DECK_TYPE'))
